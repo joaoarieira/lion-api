@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Put,
+} from '@nestjs/common';
+import { Public } from 'src/auth/jwt-auth.guard';
 import { CampusesService } from './campuses.service';
 import { CreateCampusDto } from './dto/create-campus.dto';
 import { UpdateCampusDto } from './dto/update-campus.dto';
@@ -12,6 +21,7 @@ export class CampusesController {
     return this.campusesService.create(createCampusDto);
   }
 
+  @Public()
   @Get()
   findAll() {
     return this.campusesService.findAll();

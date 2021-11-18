@@ -9,8 +9,8 @@ import { Campus } from './entities/campus.entity';
 export class CampusesService {
   constructor(
     @InjectRepository(Campus)
-    private readonly campusesRepository: Repository<Campus>
-  ){}
+    private readonly campusesRepository: Repository<Campus>,
+  ) {}
 
   create(createCampusDto: CreateCampusDto): Promise<Campus> {
     const campus = new Campus();
