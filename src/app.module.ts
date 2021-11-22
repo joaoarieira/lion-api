@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { CampusesModule } from './campuses/campuses.module';
-import { ConfigRegisterModule } from './config.module';
 import { TypeormRegisterModule } from './typeorm.module';
+import { CampusesModule } from './http/campuses/campuses.module';
+import { ConfigRegisterModule } from './config.module';
 import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
+import { UsersModule } from './http/users/users.module';
 
 @Module({
   imports: [
-    TypeormRegisterModule,
     ConfigRegisterModule,
+    TypeormRegisterModule,
     CampusesModule,
     AuthModule,
     UsersModule,

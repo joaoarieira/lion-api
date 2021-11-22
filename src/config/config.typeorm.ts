@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
-
-import { Campus } from 'src/campuses/entities/campus.entity';
+import { Campus } from 'src/http/campuses/entities/campus.entity';
 
 export const typeorm = () => ({
   typeorm: {
@@ -13,7 +12,6 @@ export const typeorm = () => ({
     password: process.env.TYPEORM_PASSWORD,
     database: process.env.TYPEORM_DATABASE,
     entities: [Campus],
-    synchronize: true, // não usar em produção
   },
 });
 
