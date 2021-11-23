@@ -13,10 +13,13 @@ export class CampusesService {
   ) {}
 
   create(createCampusDto: CreateCampusDto): Promise<Campus> {
-    const campus = new Campus();
-    campus.name = createCampusDto.name;
-
-    return this.campusesRepository.save(campus);
+    try {
+      const campus = new Campus();
+      campus.name = createCampusDto.name;
+      return this.campusesRepository.save(campus);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   findAll(): Promise<Campus[]> {

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 import { Campus } from 'src/http/campuses/entities/campus.entity';
+import { AcademicDepartment } from 'src/http/academic-departments/entities/academic-department.entity';
 
 export const typeorm = () => ({
   typeorm: {
@@ -11,7 +12,7 @@ export const typeorm = () => ({
     username: process.env.TYPEORM_USERNAME,
     password: process.env.TYPEORM_PASSWORD,
     database: process.env.TYPEORM_DATABASE,
-    entities: [Campus],
+    entities: [Campus, AcademicDepartment],
   },
 });
 

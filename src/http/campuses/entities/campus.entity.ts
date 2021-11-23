@@ -1,8 +1,10 @@
+import { AcademicDepartment } from '../../academic-departments/entities/academic-department.entity';
 import {
   Column,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
+  JoinColumn,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -21,6 +23,10 @@ export class Campus {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @DeleteDateColumn()
-  deleted_at: Date;
+  @OneToMany(
+    () => AcademicDepartment,
+    (academicDepartment) => academicDepartment.campus,
+  )
+  @JoinColumn({ name: 'id' })
+  academic_departments: AcademicDepartment[];
 }

@@ -28,11 +28,6 @@ export class CreateCampuses1637606925143 implements MigrationInterface {
           type: 'timestamp',
           default: 'now()',
         },
-        {
-          name: 'deleted_at',
-          type: 'timestamp',
-          isNullable: true,
-        },
       ],
     });
 
