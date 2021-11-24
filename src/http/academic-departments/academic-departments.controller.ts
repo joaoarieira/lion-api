@@ -6,9 +6,7 @@ import {
   Param,
   Delete,
   Put,
-  UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard, Public } from 'src/auth/jwt-auth.guard';
 import { AcademicDepartmentsService } from './academic-departments.service';
 import { CreateAcademicDepartmentDto } from './dto/create-academic-department.dto';
 import { UpdateAcademicDepartmentDto } from './dto/update-academic-department.dto';
@@ -19,13 +17,11 @@ export class AcademicDepartmentsController {
     private readonly academicDepartmentsService: AcademicDepartmentsService,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() createAcademicDepartmentDto: CreateAcademicDepartmentDto) {
     return this.academicDepartmentsService.create(createAcademicDepartmentDto);
   }
 
-  @Public()
   @Get()
   findAll() {
     return this.academicDepartmentsService.findAll();

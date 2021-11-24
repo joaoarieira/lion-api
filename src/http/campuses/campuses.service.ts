@@ -12,14 +12,10 @@ export class CampusesService {
     private readonly campusesRepository: Repository<Campus>,
   ) {}
 
-  create(createCampusDto: CreateCampusDto): Promise<Campus> {
-    try {
-      const campus = new Campus();
-      campus.name = createCampusDto.name;
-      return this.campusesRepository.save(campus);
-    } catch (error) {
-      console.log(error);
-    }
+  async create(createCampusDto: CreateCampusDto): Promise<Campus> {
+    const campus = new Campus();
+    campus.name = createCampusDto.name;
+    return this.campusesRepository.save(campus);
   }
 
   findAll(): Promise<Campus[]> {

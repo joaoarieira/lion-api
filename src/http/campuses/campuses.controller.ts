@@ -27,6 +27,7 @@ export class CampusesController {
     return this.campusesService.findAll();
   }
 
+  @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.campusesService.findOne(id);
@@ -38,7 +39,7 @@ export class CampusesController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<void> {
+  remove(@Param('id') id: string) {
     return this.campusesService.remove(id);
   }
 }

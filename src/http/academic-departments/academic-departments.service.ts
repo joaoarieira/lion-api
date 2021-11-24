@@ -31,7 +31,10 @@ export class AcademicDepartmentsService {
   }
 
   update(id: string, updateAcademicDepartmentDto: UpdateAcademicDepartmentDto) {
-    return this.update(id, updateAcademicDepartmentDto);
+    return this.academicDepartmentsRepository.update(
+      id,
+      updateAcademicDepartmentDto,
+    );
   }
 
   async remove(id: string): Promise<void> {
