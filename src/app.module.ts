@@ -1,5 +1,5 @@
-import { APP_FILTER } from '@nestjs/core';
-import { Module } from '@nestjs/common';
+import { APP_FILTER, APP_PIPE } from '@nestjs/core';
+import { Module, ValidationPipe } from '@nestjs/common';
 
 import { AppController } from './app.controller';
 

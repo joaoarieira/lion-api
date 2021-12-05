@@ -4,6 +4,7 @@ import {
   HttpException,
   Catch,
   HttpStatus,
+  NotFoundException,
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { QueryFailedError } from 'typeorm';
@@ -12,36 +13,37 @@ import { QueryFailedError } from 'typeorm';
 export class AllExceptionsFilter implements ExceptionFilter {
   constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
-  catch(exception: unknown, host: ArgumentsHost): void {
+  catch(exception: any, host: ArgumentsHost): void {
     const { httpAdapter } = this.httpAdapterHost;
 
     const ctx = host.switchToHttp();
+    const response = ctx.getResponse();
+    const request = ctx.getRequest();
 
+    const buildResponse = (exception: any, status: number) => {
+      const responseBody = {
+        statusCode: status,
+        timestamp: new Date().toISOString(),
+        path: httpAdapter.getRequestUrl(request),
+        message: exception.response.message.toString(),
+      };
+
+      httpAdapter.reply(response, responseBody, status);
+    };
+
+    // QueryFailedError
     if (exception instanceof QueryFailedError) {
-      // montar PIPE pra tratar cada tipo de problema que pode acontecer no typeorm
-      console.log(JSON.stringify(exception, null, 2));
-      const httpStatus = HttpStatus.UNPROCESSABLE_ENTITY;
-
-      const responseBody = {
-        statusCode: httpStatus,
-        timestamp: new Date().toISOString(),
-        path: httpAdapter.getRequestUrl(ctx.getRequest()),
-      };
-
-      httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
-    } else {
-      const httpStatus =
-        exception instanceof HttpException
-          ? exception.getStatus()
-          : HttpStatus.INTERNAL_SERVER_ERROR;
-
-      const responseBody = {
-        statusCode: httpStatus,
-        timestamp: new Date().toISOString(),
-        path: httpAdapter.getRequestUrl(ctx.getRequest()),
-      };
-
-      httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
+      buildResponse(exception, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    // HttpException
+    else if (exception instanceof HttpException) {
+      buildResponse(exception, exception.getStatus());
+    }
+    // Unknown Error
+    else {
+      buildResponse(exception, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    console.log(JSON.stringify(exception, null, 2));
   }
 }
