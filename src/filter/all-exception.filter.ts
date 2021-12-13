@@ -4,7 +4,6 @@ import {
   HttpException,
   Catch,
   HttpStatus,
-  NotFoundException,
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { QueryFailedError } from 'typeorm';
@@ -25,7 +24,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
         statusCode: status,
         timestamp: new Date().toISOString(),
         path: httpAdapter.getRequestUrl(request),
-        message: exception.response.message.toString(),
+        message: exception.response?.message?.toString(),
       };
 
       httpAdapter.reply(response, responseBody, status);

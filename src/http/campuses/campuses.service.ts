@@ -15,6 +15,7 @@ export class CampusesService {
   async create(createCampusDto: CreateCampusDto): Promise<Campus> {
     const campus = new Campus();
     campus.name = createCampusDto.name;
+
     return this.campusesRepository.save(campus);
   }
 
@@ -26,8 +27,9 @@ export class CampusesService {
     return this.campusesRepository.findOne(id);
   }
 
-  update(id: string, updateCampusDto: UpdateCampusDto) {
-    return this.campusesRepository.update(id, updateCampusDto);
+  async update(id: string, updateCampusDto: UpdateCampusDto): Promise<Campus> {
+    await this.campusesRepository.update(id, updateCampusDto);
+    return this.campusesRepository.findOne(id);
   }
 
   async remove(id: string): Promise<void> {

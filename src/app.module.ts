@@ -1,5 +1,5 @@
-import { APP_FILTER, APP_PIPE } from '@nestjs/core';
-import { Module, ValidationPipe } from '@nestjs/common';
+import { APP_FILTER } from '@nestjs/core';
+import { Module } from '@nestjs/common';
 
 import { AppController } from './app.controller';
 
@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './http/users/users.module';
 
 import { AllExceptionsFilter } from './filter/all-exception.filter';
+import { ProgramsModule } from './http/programs/programs.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { AllExceptionsFilter } from './filter/all-exception.filter';
     CampusesModule,
     AuthModule,
     UsersModule,
+    ProgramsModule,
   ],
   controllers: [AppController],
   providers: [{ provide: APP_FILTER, useClass: AllExceptionsFilter }],

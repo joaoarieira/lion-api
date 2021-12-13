@@ -1,7 +1,9 @@
+import { Program } from '../../programs/entities/program.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -19,4 +21,7 @@ export class Campus {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @OneToMany(() => Program, (program) => program.campus)
+  programs: Program[];
 }

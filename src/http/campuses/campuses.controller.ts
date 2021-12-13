@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   Put,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { Public } from 'src/auth/jwt-auth.guard';
 import { CampusesService } from './campuses.service';
@@ -29,17 +30,20 @@ export class CampusesController {
 
   @Public()
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.campusesService.findOne(id);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateCampusDto: UpdateCampusDto) {
+  update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() updateCampusDto: UpdateCampusDto,
+  ) {
     return this.campusesService.update(id, updateCampusDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.campusesService.remove(id);
   }
 }
