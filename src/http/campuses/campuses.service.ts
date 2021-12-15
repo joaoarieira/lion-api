@@ -24,15 +24,17 @@ export class CampusesService {
   }
 
   findOne(id: string): Promise<Campus> {
-    return this.campusesRepository.findOne(id);
+    return this.campusesRepository.findOneOrFail(id);
   }
 
   async update(id: string, updateCampusDto: UpdateCampusDto): Promise<Campus> {
+    await this.campusesRepository.findOneOrFail(id);
     await this.campusesRepository.update(id, updateCampusDto);
     return this.campusesRepository.findOne(id);
   }
 
   async remove(id: string): Promise<void> {
+    await this.campusesRepository.findOneOrFail(id);
     await this.campusesRepository.delete(id);
   }
 }

@@ -25,18 +25,20 @@ export class ProgramsService {
   }
 
   findOne(id: string): Promise<Program> {
-    return this.programsRepository.findOne(id, { relations: ['campus'] });
+    return this.programsRepository.findOneOrFail(id, { relations: ['campus'] });
   }
 
   async update(
     id: string,
     updateProgramDto: UpdateProgramDto,
   ): Promise<Program> {
+    await this.programsRepository.findOneOrFail(id);
     await this.programsRepository.update(id, updateProgramDto);
     return this.programsRepository.findOne(id, { relations: ['campus'] });
   }
 
   async remove(id: string): Promise<void> {
+    await this.programsRepository.findOneOrFail(id);
     await this.programsRepository.delete(id);
   }
 }

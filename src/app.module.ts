@@ -1,5 +1,5 @@
 import { APP_FILTER } from '@nestjs/core';
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 
 import { AppController } from './app.controller';
 
@@ -11,6 +11,8 @@ import { UsersModule } from './http/users/users.module';
 
 import { AllExceptionsFilter } from './filter/all-exception.filter';
 import { ProgramsModule } from './http/programs/programs.module';
+import { LoggerMiddleware } from './middleware/logs';
+import { DbModulesModule } from './http/db-modules/db-modules.module';
 
 @Module({
   imports: [
@@ -20,8 +22,15 @@ import { ProgramsModule } from './http/programs/programs.module';
     AuthModule,
     UsersModule,
     ProgramsModule,
+    DbModulesModule,
   ],
   controllers: [AppController],
   providers: [{ provide: APP_FILTER, useClass: AllExceptionsFilter }],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(LoggerMiddleware)
+      .forRoutes({ path: 'campuses', method: RequestMethod.GET });
+  }
+}

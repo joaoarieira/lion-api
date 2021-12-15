@@ -6,7 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
-import { QueryFailedError } from 'typeorm';
+import { EntityNotFoundError, QueryFailedError } from 'typeorm';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -19,12 +19,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const response = ctx.getResponse();
     const request = ctx.getRequest();
 
-    const buildResponse = (exception: any, status: number) => {
+    const buildResponse = (exception: any, status: number, message: string) => {
       const responseBody = {
         statusCode: status,
         timestamp: new Date().toISOString(),
         path: httpAdapter.getRequestUrl(request),
-        message: exception.response?.message?.toString(),
+        message: message,
       };
 
       httpAdapter.reply(response, responseBody, status);
@@ -32,17 +32,39 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     // QueryFailedError
     if (exception instanceof QueryFailedError) {
-      buildResponse(exception, HttpStatus.INTERNAL_SERVER_ERROR);
+      buildResponse(
+        exception,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        exception.message,
+      );
     }
     // HttpException
     else if (exception instanceof HttpException) {
-      buildResponse(exception, exception.getStatus());
+      const response = exception.getResponse() as any;
+      const message =
+        response.message instanceof Array
+          ? response.message[0].toString()
+          : response.message.toString();
+      buildResponse(exception, exception.getStatus(), message);
+    }
+    // EntityNotFoundError
+    else if (exception instanceof EntityNotFoundError) {
+      buildResponse(
+        exception,
+        HttpStatus.UNPROCESSABLE_ENTITY,
+        exception.message,
+      );
     }
     // Unknown Error
     else {
-      buildResponse(exception, HttpStatus.INTERNAL_SERVER_ERROR);
+      buildResponse(
+        exception,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        'Server error',
+      );
     }
 
+    console.log(exception.constructor.name);
     console.log(JSON.stringify(exception, null, 2));
   }
 }

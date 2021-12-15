@@ -16,7 +16,6 @@ export class CreateCampuses1637606925143 implements MigrationInterface {
         {
           name: 'name',
           type: 'varchar',
-          isUnique: true,
         },
         {
           name: 'created_at',
