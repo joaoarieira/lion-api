@@ -29,10 +29,10 @@ export class DbModulesService {
 
   async update(
     id: string,
-    updateModuleDto: UpdateDbModuleDto,
+    updateDbModuleDto: UpdateDbModuleDto,
   ): Promise<DbModule> {
     await this.dbModulesRepository.findOneOrFail(id);
-    await this.dbModulesRepository.update(id, updateModuleDto);
+    await this.dbModulesRepository.update(id, updateDbModuleDto);
     return this.dbModulesRepository.findOne(id);
   }
 

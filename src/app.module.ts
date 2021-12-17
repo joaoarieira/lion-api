@@ -14,6 +14,7 @@ import { ProgramsModule } from './http/programs/programs.module';
 import { LoggerMiddleware } from './middleware/logs';
 import { DbModulesModule } from './http/db-modules/db-modules.module';
 import { PermissionsModule } from './http/permissions/permissions.module';
+import { RolesModule } from './http/roles/roles.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { PermissionsModule } from './http/permissions/permissions.module';
     ProgramsModule,
     DbModulesModule,
     PermissionsModule,
+    RolesModule,
   ],
   controllers: [AppController],
   providers: [{ provide: APP_FILTER, useClass: AllExceptionsFilter }],

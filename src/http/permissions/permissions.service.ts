@@ -29,10 +29,10 @@ export class PermissionsService {
 
   async update(
     id: string,
-    updateModuleDto: UpdatePermissionDto,
+    updatePermissionDto: UpdatePermissionDto,
   ): Promise<Permission> {
     await this.permissionsRepository.findOneOrFail(id);
-    await this.permissionsRepository.update(id, updateModuleDto);
+    await this.permissionsRepository.update(id, updatePermissionDto);
     return this.permissionsRepository.findOne(id);
   }
 
