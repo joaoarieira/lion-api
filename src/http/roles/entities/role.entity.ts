@@ -1,7 +1,9 @@
+import { RoleModulePermission } from 'src/http/role-module-permissions/entities/role-module-permission.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -19,4 +21,10 @@ export class Role {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @OneToMany(
+    () => RoleModulePermission,
+    (roleModulePermission) => roleModulePermission.role,
+  )
+  roleModulePermission: RoleModulePermission[];
 }

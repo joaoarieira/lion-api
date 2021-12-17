@@ -15,6 +15,7 @@ import { LoggerMiddleware } from './middleware/logs';
 import { DbModulesModule } from './http/db-modules/db-modules.module';
 import { PermissionsModule } from './http/permissions/permissions.module';
 import { RolesModule } from './http/roles/roles.module';
+import { RoleModulePermissionsModule } from './http/role-module-permissions/role-module-permissions.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { RolesModule } from './http/roles/roles.module';
     DbModulesModule,
     PermissionsModule,
     RolesModule,
+    RoleModulePermissionsModule,
   ],
   controllers: [AppController],
   providers: [{ provide: APP_FILTER, useClass: AllExceptionsFilter }],
