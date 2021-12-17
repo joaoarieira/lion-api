@@ -9,16 +9,16 @@ import {
   ParseUUIDPipe,
 } from '@nestjs/common';
 import { DbModulesService } from './db-modules.service';
-import { DbCreateModuleDto } from './dto/create-db-module.dto';
-import { DbUpdateModuleDto } from './dto/update-db-module.dto';
+import { CreateDbModuleDto } from './dto/create-db-module.dto';
+import { UpdateDbModuleDto } from './dto/update-db-module.dto';
 
 @Controller('db-modules')
 export class DbModulesController {
   constructor(private readonly dbModulesService: DbModulesService) {}
 
   @Post()
-  create(@Body() createModuleDto: DbCreateModuleDto) {
-    return this.dbModulesService.create(createModuleDto);
+  create(@Body() createDbModuleDto: CreateDbModuleDto) {
+    return this.dbModulesService.create(createDbModuleDto);
   }
 
   @Get()
@@ -34,9 +34,9 @@ export class DbModulesController {
   @Put(':id')
   update(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() updateModuleDto: DbUpdateModuleDto,
+    @Body() updateDbModuleDto: UpdateDbModuleDto,
   ) {
-    return this.dbModulesService.update(id, updateModuleDto);
+    return this.dbModulesService.update(id, updateDbModuleDto);
   }
 
   @Delete(':id')

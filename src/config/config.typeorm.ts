@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { Campus } from 'src/http/campuses/entities/campus.entity';
 import { Program } from 'src/http/programs/entities/program.entity';
 import { DbModule } from 'src/http/db-modules/entities/db-module.entity';
+import { Permission } from 'src/http/permissions/entities/permission.entity';
 
 export const typeorm = () => ({
   typeorm: {
@@ -13,7 +14,7 @@ export const typeorm = () => ({
     username: process.env.TYPEORM_USERNAME,
     password: process.env.TYPEORM_PASSWORD,
     database: process.env.TYPEORM_DATABASE,
-    entities: [Campus, Program, DbModule],
+    entities: [Campus, Program, DbModule, Permission],
   },
 });
 

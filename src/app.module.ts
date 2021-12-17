@@ -13,6 +13,7 @@ import { AllExceptionsFilter } from './filter/all-exception.filter';
 import { ProgramsModule } from './http/programs/programs.module';
 import { LoggerMiddleware } from './middleware/logs';
 import { DbModulesModule } from './http/db-modules/db-modules.module';
+import { PermissionsModule } from './http/permissions/permissions.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { DbModulesModule } from './http/db-modules/db-modules.module';
     UsersModule,
     ProgramsModule,
     DbModulesModule,
+    PermissionsModule,
   ],
   controllers: [AppController],
   providers: [{ provide: APP_FILTER, useClass: AllExceptionsFilter }],

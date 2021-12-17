@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { DbModule } from './entities/db-module.entity';
-import { DbCreateModuleDto } from './dto/create-db-module.dto';
-import { DbUpdateModuleDto } from './dto/update-db-module.dto';
+import { CreateDbModuleDto } from './dto/create-db-module.dto';
+import { UpdateDbModuleDto } from './dto/update-db-module.dto';
 
 @Injectable()
 export class DbModulesService {
@@ -12,7 +12,7 @@ export class DbModulesService {
     private readonly dbModulesRepository: Repository<DbModule>,
   ) {}
 
-  async create(createModuleDto: DbCreateModuleDto): Promise<DbModule> {
+  async create(createModuleDto: CreateDbModuleDto): Promise<DbModule> {
     const dbModule = new DbModule();
     dbModule.name = createModuleDto.name;
 
@@ -29,7 +29,7 @@ export class DbModulesService {
 
   async update(
     id: string,
-    updateModuleDto: DbUpdateModuleDto,
+    updateModuleDto: UpdateDbModuleDto,
   ): Promise<DbModule> {
     await this.dbModulesRepository.findOneOrFail(id);
     await this.dbModulesRepository.update(id, updateModuleDto);
