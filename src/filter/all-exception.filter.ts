@@ -41,10 +41,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     // HttpException
     else if (exception instanceof HttpException) {
       const response = exception.getResponse() as any;
-      const message =
-        response.message instanceof Array
-          ? response.message[0].toString()
-          : response.message.toString();
+      const message = response.message;
       buildResponse(exception, exception.getStatus(), message);
     }
     // EntityNotFoundError

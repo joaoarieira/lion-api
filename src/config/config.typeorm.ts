@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
-import { Campus } from 'src/http/campuses/entities/campus.entity';
-import { Program } from 'src/http/programs/entities/program.entity';
-import { DbModule } from 'src/http/db-modules/entities/db-module.entity';
-import { Permission } from 'src/http/permissions/entities/permission.entity';
-import { Role } from 'src/http/roles/entities/role.entity';
-import { RoleModulePermission } from 'src/http/role-module-permissions/entities/role-module-permission.entity';
+import { Campus } from '../http/campuses/entities/campus.entity';
+import { Program } from '../http/programs/entities/program.entity';
+import { DbModule } from '../http/db-modules/entities/db-module.entity';
+import { Permission } from '../http/permissions/entities/permission.entity';
+import { Role } from '../http/roles/entities/role.entity';
+import { RoleModulePermission } from '../http/role-module-permissions/entities/role-module-permission.entity';
+import { User } from '../http/users/entities/user.entity';
 
 export const typeorm = () => ({
   typeorm: {
@@ -23,6 +24,7 @@ export const typeorm = () => ({
       Permission,
       Role,
       RoleModulePermission,
+      User,
     ],
   },
 });

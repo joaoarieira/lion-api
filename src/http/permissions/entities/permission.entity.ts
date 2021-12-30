@@ -1,4 +1,4 @@
-import { RoleModulePermission } from 'src/http/role-module-permissions/entities/role-module-permission.entity';
+import { RoleModulePermission } from '../../role-module-permissions/entities/role-module-permission.entity';
 import {
   Column,
   CreateDateColumn,
@@ -26,5 +26,5 @@ export class Permission {
     () => RoleModulePermission,
     (roleModulePermission) => roleModulePermission.permission,
   )
-  roleModulePermission: RoleModulePermission[];
+  roleModulePermissions: RoleModulePermission[];
 }

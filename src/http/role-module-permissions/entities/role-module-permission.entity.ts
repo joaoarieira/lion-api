@@ -1,6 +1,6 @@
-import { DbModule } from 'src/http/db-modules/entities/db-module.entity';
-import { Permission } from 'src/http/permissions/entities/permission.entity';
-import { Role } from 'src/http/roles/entities/role.entity';
+import { DbModule } from '../../db-modules/entities/db-module.entity';
+import { Permission } from '../../permissions/entities/permission.entity';
+import { Role } from '../../roles/entities/role.entity';
 import {
   Column,
   CreateDateColumn,
@@ -34,15 +34,15 @@ export class RoleModulePermission {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @ManyToOne(() => Role, (role) => role.roleModulePermission)
+  @ManyToOne(() => Role, (role) => role.roleModulePermissions)
   @JoinColumn({ name: 'role_id', referencedColumnName: 'id' })
   role: Role;
 
-  @ManyToOne(() => DbModule, (dbModule) => dbModule.roleModulePermission)
+  @ManyToOne(() => DbModule, (dbModule) => dbModule.roleModulePermissions)
   @JoinColumn({ name: 'db_module_id', referencedColumnName: 'id' })
   db_module: DbModule;
 
-  @ManyToOne(() => Permission, (permission) => permission.roleModulePermission)
+  @ManyToOne(() => Permission, (permission) => permission.roleModulePermissions)
   @JoinColumn({ name: 'permission_id', referencedColumnName: 'id' })
   permission: Permission;
 }

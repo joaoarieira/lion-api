@@ -1,4 +1,5 @@
-import { RoleModulePermission } from 'src/http/role-module-permissions/entities/role-module-permission.entity';
+import { RoleModulePermission } from '../../role-module-permissions/entities/role-module-permission.entity';
+import { User } from '../../users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -26,5 +27,8 @@ export class Role {
     () => RoleModulePermission,
     (roleModulePermission) => roleModulePermission.role,
   )
-  roleModulePermission: RoleModulePermission[];
+  roleModulePermissions: RoleModulePermission[];
+
+  @OneToMany(() => User, (user) => user.role)
+  users: User[];
 }
