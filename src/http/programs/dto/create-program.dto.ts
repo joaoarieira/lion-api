@@ -6,7 +6,7 @@ export class CreateProgramDto {
   @IsString()
   name: string;
 
-  @Validate(IsValidFK, [Campus, 'id'])
   @IsUUID()
+  @Validate(IsValidFK, [Campus, 'id'])
   campus_id: string;
 }

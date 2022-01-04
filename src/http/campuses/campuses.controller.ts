@@ -7,8 +7,12 @@ import {
   Delete,
   Put,
   ParseUUIDPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { Public } from 'src/auth/jwt-auth.guard';
+import { RolesAccessGuard } from 'src/auth/roles-access.guard';
+import { RolesCanAccess } from '../../decorators/roles-can-access.decorator';
+import { RoleName } from '../roles/entities/role-name.enum';
 import { CampusesService } from './campuses.service';
 import { CreateCampusDto } from './dto/create-campus.dto';
 import { UpdateCampusDto } from './dto/update-campus.dto';
@@ -22,7 +26,9 @@ export class CampusesController {
     return this.campusesService.create(createCampusDto);
   }
 
-  @Public()
+  // TODO: pensar sobre esse guard ser global
+  @RolesCanAccess(RoleName.STUDENT_TUTOR)
+  @UseGuards(RolesAccessGuard)
   @Get()
   findAll() {
     return this.campusesService.findAll();

@@ -12,9 +12,9 @@ interface IsValidFKArguments<E> extends ValidationArguments {
 @ValidatorConstraint({ name: 'isValidFK', async: true })
 export class IsValidFK implements ValidatorConstraintInterface {
   public async validate<E>(value: string, args: IsValidFKArguments<E>) {
-    const [Entity] = args.constraints;
+    const [entity] = args.constraints;
     const exists =
-      (await getRepository(Entity).count({
+      (await getRepository(entity).count({
         where: { id: value },
       })) > 0;
     return exists;
