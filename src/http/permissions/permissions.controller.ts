@@ -11,11 +11,14 @@ import {
 import { PermissionsService } from './permissions.service';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
+import { RolesCanAccess } from 'src/decorators/roles-can-access.decorator';
+import { RoleName } from '../roles/entities/role-name.enum';
 
 @Controller('permissions')
 export class PermissionsController {
   constructor(private readonly permissionsService: PermissionsService) {}
 
+  @RolesCanAccess(RoleName.ADMIN)
   @Post()
   create(@Body() createPermissionDto: CreatePermissionDto) {
     return this.permissionsService.create(createPermissionDto);
@@ -31,6 +34,7 @@ export class PermissionsController {
     return this.permissionsService.findOne(id);
   }
 
+  @RolesCanAccess(RoleName.ADMIN)
   @Put(':id')
   update(
     @Param('id', ParseUUIDPipe) id: string,
@@ -39,6 +43,7 @@ export class PermissionsController {
     return this.permissionsService.update(id, updatePermissionDto);
   }
 
+  @RolesCanAccess(RoleName.ADMIN)
   @Delete(':id')
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.permissionsService.remove(id);

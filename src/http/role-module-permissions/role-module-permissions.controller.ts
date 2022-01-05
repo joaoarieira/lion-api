@@ -11,6 +11,8 @@ import {
 import { RoleModulePermissionsService } from './role-module-permissions.service';
 import { CreateRoleModulePermissionDto } from './dto/create-role-module-permission.dto';
 import { UpdateRoleModulePermissionDto } from './dto/update-role-module-permission.dto';
+import { RolesCanAccess } from 'src/decorators/roles-can-access.decorator';
+import { RoleName } from '../roles/entities/role-name.enum';
 
 @Controller('role-module-permissions')
 export class RoleModulePermissionsController {
@@ -18,6 +20,7 @@ export class RoleModulePermissionsController {
     private readonly roleModulePermissionsService: RoleModulePermissionsService,
   ) {}
 
+  @RolesCanAccess(RoleName.ADMIN)
   @Post()
   create(
     @Body() createRoleModulePermissionsDto: CreateRoleModulePermissionDto,
@@ -37,6 +40,7 @@ export class RoleModulePermissionsController {
     return this.roleModulePermissionsService.findOne(id);
   }
 
+  @RolesCanAccess(RoleName.ADMIN)
   @Put(':id')
   update(
     @Param('id', ParseUUIDPipe) id: string,
@@ -48,6 +52,7 @@ export class RoleModulePermissionsController {
     );
   }
 
+  @RolesCanAccess(RoleName.ADMIN)
   @Delete(':id')
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.roleModulePermissionsService.remove(id);

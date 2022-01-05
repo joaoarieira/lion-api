@@ -7,10 +7,8 @@ import {
   Delete,
   Put,
   ParseUUIDPipe,
-  UseGuards,
 } from '@nestjs/common';
 import { Public } from 'src/auth/jwt-auth.guard';
-import { RolesAccessGuard } from 'src/auth/roles-access.guard';
 import { RolesCanAccess } from '../../decorators/roles-can-access.decorator';
 import { RoleName } from '../roles/entities/role-name.enum';
 import { CampusesService } from './campuses.service';
@@ -21,14 +19,13 @@ import { UpdateCampusDto } from './dto/update-campus.dto';
 export class CampusesController {
   constructor(private readonly campusesService: CampusesService) {}
 
+  @RolesCanAccess(RoleName.ADMIN)
   @Post()
   create(@Body() createCampusDto: CreateCampusDto) {
     return this.campusesService.create(createCampusDto);
   }
 
-  // TODO: pensar sobre esse guard ser global
-  @RolesCanAccess(RoleName.STUDENT_TUTOR)
-  @UseGuards(RolesAccessGuard)
+  @Public()
   @Get()
   findAll() {
     return this.campusesService.findAll();
@@ -40,6 +37,7 @@ export class CampusesController {
     return this.campusesService.findOne(id);
   }
 
+  @RolesCanAccess(RoleName.ADMIN)
   @Put(':id')
   update(
     @Param('id', ParseUUIDPipe) id: string,
@@ -48,6 +46,7 @@ export class CampusesController {
     return this.campusesService.update(id, updateCampusDto);
   }
 
+  @RolesCanAccess(RoleName.ADMIN)
   @Delete(':id')
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.campusesService.remove(id);

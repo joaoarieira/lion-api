@@ -24,6 +24,7 @@ import { RolesAccessGuard } from './roles-access.guard';
     JwtStrategy,
     RolesAccessGuard,
     { provide: APP_GUARD, useClass: JwtAuthGuard },
+    { provide: APP_GUARD, useClass: RolesAccessGuard },
   ],
   exports: [AuthService],
 })
