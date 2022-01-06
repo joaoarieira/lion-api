@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const bcrypt = require('bcrypt');
@@ -25,12 +26,31 @@ export class UsersService {
     return this.usersRepository.findOne(id, { relations: ['role'] });
   }
 
-  findAll(): Promise<User[]> {
-    return this.usersRepository.find({ relations: ['role'] });
+  async findAll(): Promise<User[]> {
+    const usersData = await this.usersRepository.find({ relations: ['role'] });
+    let usersDataWithowPasswordInfo = [];
+
+    if (usersData) {
+      usersDataWithowPasswordInfo = usersData.map((userData) => {
+        delete userData.password_hash;
+        return userData;
+      });
+      return usersDataWithowPasswordInfo;
+    }
+
+    return usersData;
   }
 
-  findOne(): Promise<User> {
-    return this.usersRepository.findOne({ relations: ['role'] });
+  async findOne(id: string): Promise<User> {
+    const userData = await this.usersRepository.findOneOrFail(id, {
+      relations: ['role'],
+    });
+
+    if (userData) {
+      delete userData.password_hash;
+    }
+
+    return userData;
   }
 
   findOneByEmail(email: string): Promise<User> {
@@ -38,5 +58,16 @@ export class UsersService {
       where: { email: email },
       relations: ['role'],
     });
+  }
+
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+    await this.usersRepository.findOneOrFail(id);
+    await this.usersRepository.update(id, updateUserDto);
+    return this.usersRepository.findOne(id);
+  }
+
+  async remove(id: string): Promise<void> {
+    await this.usersRepository.findOneOrFail(id);
+    await this.usersRepository.delete(id);
   }
 }
