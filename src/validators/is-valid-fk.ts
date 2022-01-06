@@ -21,6 +21,6 @@ export class IsValidFK implements ValidatorConstraintInterface {
   }
 
   public defaultMessage() {
-    return '$property does not exist!';
+    return '$property does not exist';
   }
 }

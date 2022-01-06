@@ -18,7 +18,7 @@ export class UsersService {
     const user = new User();
     user.name = createUserDto.name;
     user.email = createUserDto.email;
-    user.is_active = createUserDto.is_active || true;
+    user.is_active = createUserDto.is_active ?? true;
     user.role_id = createUserDto.role_id;
     user.password_hash = bcrypt.hashSync(createUserDto.password, 10);
     const newUser = await this.usersRepository.save(user);
@@ -26,36 +26,29 @@ export class UsersService {
     return this.usersRepository.findOne(id, { relations: ['role'] });
   }
 
-  async findAll(): Promise<User[]> {
-    const usersData = await this.usersRepository.find({ relations: ['role'] });
-    let usersDataWithowPasswordInfo = [];
-
-    if (usersData) {
-      usersDataWithowPasswordInfo = usersData.map((userData) => {
-        delete userData.password_hash;
-        return userData;
-      });
-      return usersDataWithowPasswordInfo;
-    }
-
-    return usersData;
+  findAll(): Promise<User[]> {
+    return this.usersRepository.find({ relations: ['role'] });
   }
 
-  async findOne(id: string): Promise<User> {
-    const userData = await this.usersRepository.findOneOrFail(id, {
+  findOne(id: string): Promise<User> {
+    return this.usersRepository.findOneOrFail(id, {
       relations: ['role'],
     });
-
-    if (userData) {
-      delete userData.password_hash;
-    }
-
-    return userData;
   }
 
   findOneByEmail(email: string): Promise<User> {
     return this.usersRepository.findOne({
       where: { email: email },
+      select: [
+        'id',
+        'role_id',
+        'name',
+        'email',
+        'is_active',
+        'created_at',
+        'updated_at',
+        'password_hash',
+      ],
       relations: ['role'],
     });
   }

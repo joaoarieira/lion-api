@@ -5,9 +5,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { StudentTutoring } from '../../student-tutorings/entities/student-tutoring.entity';
 
 @Entity('users')
 export class User {
@@ -23,8 +25,8 @@ export class User {
   @Column()
   email: string;
 
-  @Column()
-  password_hash: string;
+  @Column({ select: false })
+  password_hash?: string;
 
   @Column({ default: true })
   is_active: boolean;
@@ -38,4 +40,10 @@ export class User {
   @ManyToOne(() => Role, (role) => role.users)
   @JoinColumn({ name: 'role_id', referencedColumnName: 'id' })
   role: Role;
+
+  @OneToMany(
+    () => StudentTutoring,
+    (studentTutoring) => studentTutoring.professor,
+  )
+  student_tutorings_supervised: StudentTutoring[];
 }

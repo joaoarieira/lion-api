@@ -16,6 +16,7 @@ import { DbModulesModule } from './http/db-modules/db-modules.module';
 import { PermissionsModule } from './http/permissions/permissions.module';
 import { RolesModule } from './http/roles/roles.module';
 import { RoleModulePermissionsModule } from './http/role-module-permissions/role-module-permissions.module';
+import { StudentTutoringsModule } from './http/student-tutorings/student-tutorings.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { RoleModulePermissionsModule } from './http/role-module-permissions/role
     PermissionsModule,
     RolesModule,
     RoleModulePermissionsModule,
+    StudentTutoringsModule,
   ],
   controllers: [AppController],
   providers: [{ provide: APP_FILTER, useClass: AllExceptionsFilter }],

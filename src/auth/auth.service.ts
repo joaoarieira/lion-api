@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '../http/users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { User } from 'src/http/users/entities/user.entity';
+import { User } from '../http/users/entities/user.entity';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const bcrypt = require('bcrypt');
 
