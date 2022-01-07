@@ -15,22 +15,22 @@ import { RoleName } from '../../roles/entities/role-name.enum';
 
 export class CreateStudentTutoringDto {
   // TODO: (bug) a validação IsValidFK está sendo executada mesmo se professor_id não for UUID
-  // talvez esses decoratos IsValidFK e IsRole deverão desaparecer
-  @IsUUID()
-  @Validate(IsValidFK, [User])
+  // Celsão mitou: a ordem de validação dos decorators é de baixo para cima
   @Validate(IsRole, [RoleName.PROFESSOR])
+  @Validate(IsValidFK, [User])
+  @IsUUID()
   @IsOptional()
   professor_id: string;
 
-  @IsString()
-  @Length(6)
   @Validate(IsAvaible, [StudentTutoring, 'course_code'])
+  @Length(6)
+  @IsString()
   course_code: string;
 
   @IsString()
   course_name: string;
 
-  @IsOptional()
   @IsBoolean()
+  @IsOptional()
   is_active?: boolean;
 }
