@@ -9,14 +9,14 @@ export class CreateRoleModulePermissionDto {
   allow: boolean;
 
   @IsUUID()
-  @Validate(IsValidFK, [Role, 'id'])
+  @Validate(IsValidFK, [Role])
   role_id: string;
 
   @IsUUID()
-  @Validate(IsValidFK, [DbModule, 'id'])
+  @Validate(IsValidFK, [DbModule])
   db_module_id: string;
 
   @IsUUID()
-  @Validate(IsValidFK, [Permission, 'id'])
+  @Validate(IsValidFK, [Permission])
   permission_id: string;
 }

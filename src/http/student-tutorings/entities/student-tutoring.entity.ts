@@ -5,9 +5,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { StudentTutoringTutor } from '../../student-tutoring-tutors/entities/student-tutoring-tutor.entity';
 
 @Entity('student_tutorings')
 export class StudentTutoring {
@@ -32,7 +34,13 @@ export class StudentTutoring {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @ManyToOne(() => User, (user) => user.student_tutorings_supervised)
+  @ManyToOne(() => User, (user) => user.student_tutorings)
   @JoinColumn({ name: 'professor_id', referencedColumnName: 'id' })
   professor: User;
+
+  @OneToMany(
+    () => StudentTutoringTutor,
+    (studentTutoringTutor) => studentTutoringTutor.student_tutoring,
+  )
+  student_tutorings_tutors: User[];
 }

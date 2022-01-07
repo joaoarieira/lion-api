@@ -23,6 +23,6 @@ export class IsAvaible implements ValidatorConstraintInterface {
   }
 
   public defaultMessage() {
-    return '$property is already being used!';
+    return '$property is already being used';
   }
 }

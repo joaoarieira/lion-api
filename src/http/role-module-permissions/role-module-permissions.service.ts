@@ -11,6 +11,7 @@ export class RoleModulePermissionsService {
     @InjectRepository(RoleModulePermission)
     private readonly roleModulePermissionRepository: Repository<RoleModulePermission>,
   ) {}
+
   async create(
     createRoleModulePermissionDto: CreateRoleModulePermissionDto,
   ): Promise<RoleModulePermission> {

@@ -25,7 +25,7 @@ export class CreateUserDto {
   password: string;
 
   @IsUUID()
-  @Validate(IsValidFK, [Role, 'id'])
+  @Validate(IsValidFK, [Role])
   role_id: string;
 
   @IsBoolean()
