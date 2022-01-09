@@ -10,21 +10,20 @@ import { IsAvaible } from 'src/validators/is-avaible';
 import { User } from '../entities/user.entity';
 
 export class UpdateUserDto {
-  @IsOptional()
   @IsString()
+  @IsOptional()
   name: string;
 
-  @IsOptional()
-  @IsEmail()
   @Validate(IsAvaible, [User, 'email'])
+  @IsEmail()
+  @IsOptional()
   email: string;
 
-  @IsOptional()
-  @IsString()
   @MinLength(8)
+  @IsString()
+  @IsOptional()
   password: string;
 
-  @IsOptional()
   @IsBoolean()
   @IsOptional()
   is_active?: boolean;

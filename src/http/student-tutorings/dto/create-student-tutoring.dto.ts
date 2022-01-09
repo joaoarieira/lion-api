@@ -14,8 +14,6 @@ import { IsRole } from 'src/validators/is-role';
 import { RoleName } from '../../roles/entities/role-name.enum';
 
 export class CreateStudentTutoringDto {
-  // TODO: (bug) a validação IsValidFK está sendo executada mesmo se professor_id não for UUID
-  // Celsão mitou: a ordem de validação dos decorators é de baixo para cima
   @Validate(IsRole, [RoleName.PROFESSOR])
   @Validate(IsValidFK, [User])
   @IsUUID()

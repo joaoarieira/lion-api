@@ -6,12 +6,12 @@ import { IsRole } from 'src/validators/is-role';
 import { RoleName } from 'src/http/roles/entities/role-name.enum';
 
 export class CreateStudentTutoringTutorDto {
-  @IsUUID()
   @Validate(IsValidFK, [StudentTutoring])
+  @IsUUID()
   student_tutoring_id: string;
 
-  @IsUUID()
-  @Validate(IsValidFK, [User])
   @Validate(IsRole, [RoleName.STUDENT_TUTOR])
+  @Validate(IsValidFK, [User])
+  @IsUUID()
   tutor_id: string;
 }

@@ -16,16 +16,16 @@ export class CreateUserDto {
   @IsString()
   name: string;
 
-  @IsEmail()
   @Validate(IsAvaible, [User, 'email'])
+  @IsEmail()
   email: string;
 
-  @IsString()
   @MinLength(8)
+  @IsString()
   password: string;
 
-  @IsUUID()
   @Validate(IsValidFK, [Role])
+  @IsUUID()
   role_id: string;
 
   @IsBoolean()
