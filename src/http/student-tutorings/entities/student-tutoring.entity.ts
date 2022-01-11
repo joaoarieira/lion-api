@@ -10,6 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { StudentTutoringTutor } from '../../student-tutoring-tutors/entities/student-tutoring-tutor.entity';
+import { StudentTutoringProgram } from '../../student-tutoring-programs/entities/student-tutoring-program.entity';
 
 @Entity('student_tutorings')
 export class StudentTutoring {
@@ -43,4 +44,10 @@ export class StudentTutoring {
     (studentTutoringTutor) => studentTutoringTutor.student_tutoring,
   )
   student_tutorings_tutors: User[];
+
+  @OneToMany(
+    () => StudentTutoringProgram,
+    (studentTutoringProgram) => studentTutoringProgram.student_tutoring,
+  )
+  student_tutoring_programs: StudentTutoringProgram[];
 }

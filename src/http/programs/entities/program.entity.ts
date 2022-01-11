@@ -5,9 +5,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { StudentTutoringProgram } from '../../student-tutoring-programs/entities/student-tutoring-program.entity';
 
 @Entity('programs')
 export class Program {
@@ -29,4 +31,10 @@ export class Program {
   @ManyToOne(() => Campus, (campus) => campus.programs)
   @JoinColumn({ name: 'campus_id', referencedColumnName: 'id' })
   campus: Campus;
+
+  @OneToMany(
+    () => StudentTutoringProgram,
+    (studentTutoringPrograms) => studentTutoringPrograms.program,
+  )
+  student_tutoring_programs: StudentTutoringProgram[];
 }

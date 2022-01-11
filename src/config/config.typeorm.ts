@@ -10,6 +10,7 @@ import { RoleModulePermission } from '../http/role-module-permissions/entities/r
 import { User } from '../http/users/entities/user.entity';
 import { StudentTutoring } from '../http/student-tutorings/entities/student-tutoring.entity';
 import { StudentTutoringTutor } from '../http/student-tutoring-tutors/entities/student-tutoring-tutor.entity';
+import { StudentTutoringProgram } from 'src/http/student-tutoring-programs/entities/student-tutoring-program.entity';
 
 export const typeorm = () => ({
   typeorm: {
@@ -29,6 +30,7 @@ export const typeorm = () => ({
       User,
       StudentTutoring,
       StudentTutoringTutor,
+      StudentTutoringProgram,
     ],
   },
 });

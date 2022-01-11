@@ -5,13 +5,13 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
-export class CreateStudentTutoringTutors1641520754344
+export class CreateStudentTutoringPrograms1641690147183
   implements MigrationInterface
 {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'student_tutoring_tutors',
+        name: 'student_tutoring_programs',
         columns: [
           {
             name: 'id',
@@ -22,7 +22,7 @@ export class CreateStudentTutoringTutors1641520754344
             isUnique: true,
           },
           {
-            name: 'tutor_id',
+            name: 'program_id',
             type: 'uuid',
             isPrimary: true,
           },
@@ -45,11 +45,11 @@ export class CreateStudentTutoringTutors1641520754344
       }),
     );
 
-    await queryRunner.createForeignKeys('student_tutoring_tutors', [
+    await queryRunner.createForeignKeys('student_tutoring_programs', [
       new TableForeignKey({
-        columnNames: ['tutor_id'],
+        columnNames: ['program_id'],
         referencedColumnNames: ['id'],
-        referencedTableName: 'users',
+        referencedTableName: 'programs',
       }),
       new TableForeignKey({
         columnNames: ['student_tutoring_id'],
@@ -60,6 +60,6 @@ export class CreateStudentTutoringTutors1641520754344
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable('student_tutoring_tutors');
+    await queryRunner.dropTable('student_tutoring_programs');
   }
 }
