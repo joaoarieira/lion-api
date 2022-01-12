@@ -2,11 +2,13 @@ import {
   ArrayNotEmpty,
   IsArray,
   IsBoolean,
+  IsNumber,
   IsOptional,
   IsString,
   IsUUID,
   Length,
   Validate,
+  ValidateIf,
 } from 'class-validator';
 import { User } from '../../users/entities/user.entity';
 import { IsValidFK } from 'src/validators/is-valid-fk';
@@ -41,11 +43,14 @@ export class CreateStudentTutoringDto {
   @IsArray()
   programs_ids: string[];
 
-  // TODO: criar lógica na service
-  // excluir controller student_tutoring_tutors
+  @Validate(IsRole, [RoleName.STUDENT_TUTOR], { each: true })
   @Validate(IsValidFK, [User], { each: true })
   @IsUUID(4, { each: true })
-  @ArrayNotEmpty()
+  @ValidateIf((o) => {
+    console.log(o);
+    console.log(o.tutors_ids.length > 0);
+    return o.tutors_ids.length > 0;
+  })
   @IsArray()
   @IsOptional()
   tutors_ids: string[];

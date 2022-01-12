@@ -1,3 +1,5 @@
+// TODO: remover essa controller
+
 import {
   Controller,
   Get,

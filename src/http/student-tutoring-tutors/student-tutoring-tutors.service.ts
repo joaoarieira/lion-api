@@ -31,6 +31,12 @@ export class StudentTutoringTutorsService {
     });
   }
 
+  findAllByStudentTutoringId(id: string) {
+    return this.studentTutoringTutorsRepository.find({
+      where: { student_tutoring_id: id },
+    });
+  }
+
   findOne(id: string): Promise<StudentTutoringTutor> {
     return this.studentTutoringTutorsRepository.findOneOrFail(id, {
       relations: ['student_tutoring', 'tutor'],
@@ -54,5 +60,10 @@ export class StudentTutoringTutorsService {
   async remove(id: string): Promise<void> {
     await this.studentTutoringTutorsRepository.findOneOrFail(id);
     await this.studentTutoringTutorsRepository.delete(id);
+  }
+
+  async removeAllByStudentTutoringId(id: string) {
+    const records = await this.findAllByStudentTutoringId(id);
+    this.studentTutoringTutorsRepository.remove(records);
   }
 }

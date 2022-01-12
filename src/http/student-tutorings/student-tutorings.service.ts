@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateStudentTutoringProgramDto } from '../student-tutoring-programs/dto/create-student-tutoring-program.dto';
 import { StudentTutoringProgramsService } from '../student-tutoring-programs/student-tutoring-programs.service';
+import { CreateStudentTutoringTutorDto } from '../student-tutoring-tutors/dto/create-student-tutoring-tutor.dto';
 import { StudentTutoringTutorsService } from '../student-tutoring-tutors/student-tutoring-tutors.service';
 import { CreateStudentTutoringDto } from './dto/create-student-tutoring.dto';
 import { UpdateStudentTutoringDto } from './dto/update-student-tutoring.dto';
@@ -42,10 +43,20 @@ export class StudentTutoringsService {
       );
     }
 
+    for (const tutor_id of createStudentTutoringDto.tutors_ids) {
+      const studentTutoringTutorDto = {
+        student_tutoring_id,
+        tutor_id,
+      } as CreateStudentTutoringTutorDto;
+
+      await this.studentTutoringTutorsService.create(studentTutoringTutorDto);
+    }
+
     return await this.studentTutoringsRepository.findOne(student_tutoring_id, {
       relations: [
         'professor',
         'student_tutorings_tutors',
+        'student_tutorings_tutors.tutor',
         'student_tutoring_programs',
         'student_tutoring_programs.program',
       ],
@@ -57,6 +68,7 @@ export class StudentTutoringsService {
       relations: [
         'professor',
         'student_tutorings_tutors',
+        'student_tutorings_tutors.tutor',
         'student_tutoring_programs',
         'student_tutoring_programs.program',
       ],
@@ -68,6 +80,7 @@ export class StudentTutoringsService {
       relations: [
         'professor',
         'student_tutorings_tutors',
+        'student_tutorings_tutors.tutor',
         'student_tutoring_programs',
         'student_tutoring_programs.program',
       ],
@@ -81,7 +94,8 @@ export class StudentTutoringsService {
     const student_tutoring_id = id;
     await this.studentTutoringsRepository.findOneOrFail(student_tutoring_id);
 
-    const { programs_ids, ...studentTutoring } = updateStudentTutoringDto;
+    const { programs_ids, tutors_ids, ...studentTutoring } =
+      updateStudentTutoringDto;
 
     if (programs_ids) {
       await this.studentTutoringProgramsService.removeAllByStudentTutoringId(
@@ -100,12 +114,28 @@ export class StudentTutoringsService {
       }
     }
 
+    if (tutors_ids) {
+      await this.studentTutoringTutorsService.removeAllByStudentTutoringId(
+        student_tutoring_id,
+      );
+
+      for (const tutor_id of tutors_ids) {
+        const studentTutoringTutorDto = {
+          student_tutoring_id,
+          tutor_id,
+        } as CreateStudentTutoringTutorDto;
+
+        await this.studentTutoringTutorsService.create(studentTutoringTutorDto);
+      }
+    }
+
     await this.studentTutoringsRepository.update(id, studentTutoring);
 
     return await this.studentTutoringsRepository.findOne(id, {
       relations: [
         'professor',
         'student_tutorings_tutors',
+        'student_tutorings_tutors.tutor',
         'student_tutoring_programs',
         'student_tutoring_programs.program',
       ],

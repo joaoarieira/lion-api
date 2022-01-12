@@ -7,6 +7,7 @@ import {
   IsUUID,
   Length,
   Validate,
+  ValidateIf,
 } from 'class-validator';
 import { User } from '../../users/entities/user.entity';
 import { IsValidFK } from 'src/validators/is-valid-fk';
@@ -43,4 +44,12 @@ export class UpdateStudentTutoringDto {
   @IsArray()
   @IsOptional()
   programs_ids: string[];
+
+  @Validate(IsRole, [RoleName.STUDENT_TUTOR], { each: true })
+  @Validate(IsValidFK, [User], { each: true })
+  @IsUUID(4, { each: true })
+  @ValidateIf((o) => o.tutors_ids.length > 0)
+  @IsArray()
+  @IsOptional()
+  tutors_ids: string[];
 }

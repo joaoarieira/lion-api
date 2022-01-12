@@ -28,6 +28,6 @@ export class IsRole implements ValidatorConstraintInterface {
   }
 
   public defaultMessage() {
-    return `$property belongs to user without permission`;
+    return `$property does not exist or belong to a user without permission`;
   }
 }
