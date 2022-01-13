@@ -30,6 +30,7 @@ export class StudentTutoringsService {
     const newStudentTutoring = await this.studentTutoringsRepository.save(
       studentTutoring,
     );
+
     const { id: student_tutoring_id } = newStudentTutoring;
 
     for (const program_id of createStudentTutoringDto.programs_ids) {
@@ -97,7 +98,7 @@ export class StudentTutoringsService {
     const { programs_ids, tutors_ids, ...studentTutoring } =
       updateStudentTutoringDto;
 
-    if (programs_ids) {
+    if (programs_ids !== undefined) {
       await this.studentTutoringProgramsService.removeAllByStudentTutoringId(
         id,
       );
@@ -114,7 +115,7 @@ export class StudentTutoringsService {
       }
     }
 
-    if (tutors_ids) {
+    if (tutors_ids !== undefined) {
       await this.studentTutoringTutorsService.removeAllByStudentTutoringId(
         student_tutoring_id,
       );
@@ -143,8 +144,9 @@ export class StudentTutoringsService {
   }
 
   async remove(id: string): Promise<void> {
-    await this.studentTutoringProgramsService.removeAllByStudentTutoringId(id);
     await this.studentTutoringsRepository.findOneOrFail(id);
+    await this.studentTutoringProgramsService.removeAllByStudentTutoringId(id);
+    await this.studentTutoringTutorsService.removeAllByStudentTutoringId(id);
     this.studentTutoringsRepository.delete(id);
   }
 }

@@ -1,6 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { RoleName } from '../roles/entities/role-name.enum';
+import { RolesService } from '../roles/roles.service';
+import { CreateStudentTutoringTutorDto } from '../student-tutoring-tutors/dto/create-student-tutoring-tutor.dto';
+import { StudentTutoringTutorsService } from '../student-tutoring-tutors/student-tutoring-tutors.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -12,9 +16,18 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
+    private readonly studentTutoringTutorsService: StudentTutoringTutorsService,
+    private readonly rolesService: RolesService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
+    if (createUserDto.student_tutorings_ids !== undefined) {
+      const role = await this.rolesService.findOne(createUserDto.role_id);
+      if (role.name !== RoleName.STUDENT_TUTOR) {
+        throw new BadRequestException('this user can not be a student tutor');
+      }
+    }
+
     const user = new User();
     user.name = createUserDto.name;
     user.email = createUserDto.email;
@@ -22,8 +35,26 @@ export class UsersService {
     user.role_id = createUserDto.role_id;
     user.password_hash = bcrypt.hashSync(createUserDto.password, 10);
     const newUser = await this.usersRepository.save(user);
-    const { id } = newUser;
-    return this.usersRepository.findOne(id, { relations: ['role'] });
+
+    const { id: user_id } = newUser;
+
+    for (const student_tutoring_id of createUserDto.student_tutorings_ids) {
+      const studentTutoringTutorDto = {
+        student_tutoring_id,
+        tutor_id: user_id,
+      } as CreateStudentTutoringTutorDto;
+
+      await this.studentTutoringTutorsService.create(studentTutoringTutorDto);
+    }
+
+    return this.usersRepository.findOne(user_id, {
+      relations: [
+        'role',
+        'student_tutorings',
+        'student_tutoring_tutors',
+        'student_tutoring_tutors.student_tutoring',
+      ],
+    });
   }
 
   findAll(): Promise<User[]> {
@@ -32,7 +63,12 @@ export class UsersService {
 
   findOne(id: string): Promise<User> {
     return this.usersRepository.findOneOrFail(id, {
-      relations: ['role'],
+      relations: [
+        'role',
+        'student_tutorings',
+        'student_tutoring_tutors',
+        'student_tutoring_tutors.student_tutoring',
+      ],
     });
   }
 
@@ -49,18 +85,54 @@ export class UsersService {
         'updated_at',
         'password_hash',
       ],
-      relations: ['role'],
+      relations: [
+        'role',
+        'student_tutorings',
+        'student_tutoring_tutors',
+        'student_tutoring_tutors.student_tutoring',
+      ],
     });
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-    await this.usersRepository.findOneOrFail(id);
-    await this.usersRepository.update(id, updateUserDto);
-    return this.usersRepository.findOne(id);
+    const { role: userRole } = await this.usersRepository.findOneOrFail(id, {
+      relations: ['role'],
+    });
+
+    const { student_tutorings_ids, ...user } = updateUserDto;
+
+    if (student_tutorings_ids !== undefined) {
+      if (userRole.name !== RoleName.STUDENT_TUTOR) {
+        throw new BadRequestException('this user is not a student tutor');
+      }
+
+      await this.studentTutoringTutorsService.removeAllByTutorId(id);
+
+      for (const student_tutoring_id of student_tutorings_ids) {
+        const studentTutoringTutorDto = {
+          student_tutoring_id,
+          tutor_id: id,
+        } as CreateStudentTutoringTutorDto;
+
+        await this.studentTutoringTutorsService.create(studentTutoringTutorDto);
+      }
+    }
+
+    await this.usersRepository.update(id, user);
+
+    return this.usersRepository.findOne(id, {
+      relations: [
+        'role',
+        'student_tutorings',
+        'student_tutoring_tutors',
+        'student_tutoring_tutors.student_tutoring',
+      ],
+    });
   }
 
   async remove(id: string): Promise<void> {
     await this.usersRepository.findOneOrFail(id);
+    this.studentTutoringTutorsService.removeAllByTutorId(id);
     await this.usersRepository.delete(id);
   }
 }

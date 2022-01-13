@@ -48,7 +48,7 @@ export class UpdateStudentTutoringDto {
   @Validate(IsRole, [RoleName.STUDENT_TUTOR], { each: true })
   @Validate(IsValidFK, [User], { each: true })
   @IsUUID(4, { each: true })
-  @ValidateIf((o) => o.tutors_ids.length > 0)
+  @ValidateIf((o) => o.tutors_ids?.length > 0)
   @IsArray()
   @IsOptional()
   tutors_ids: string[];
