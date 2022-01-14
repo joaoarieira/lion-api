@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Program } from './entities/program.entity';
@@ -38,7 +38,22 @@ export class ProgramsService {
   }
 
   async remove(id: string): Promise<void> {
-    await this.programsRepository.findOneOrFail(id);
+    const program = await this.programsRepository.findOneOrFail(id, {
+      relations: ['student_tutoring_programs'],
+    });
+
+    const canDelete =
+      program.student_tutoring_programs.filter(
+        (student_tutoring_program) =>
+          student_tutoring_program.program_id === id,
+      ).length <= 0;
+
+    if (!canDelete) {
+      throw new BadRequestException(
+        'cannot delete a program that is related to a student_tutoring',
+      );
+    }
+
     await this.programsRepository.delete(id);
   }
 }

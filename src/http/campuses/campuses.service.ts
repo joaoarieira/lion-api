@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateCampusDto } from './dto/create-campus.dto';
@@ -34,7 +34,18 @@ export class CampusesService {
   }
 
   async remove(id: string): Promise<void> {
-    await this.campusesRepository.findOneOrFail(id);
+    const campus = await this.campusesRepository.findOneOrFail(id, {
+      relations: ['programs'],
+    });
+
+    const canDelete = campus.programs.length <= 0;
+
+    if (!canDelete) {
+      throw new BadRequestException(
+        'cannot delete a campus that is related to a program',
+      );
+    }
+
     await this.campusesRepository.delete(id);
   }
 }

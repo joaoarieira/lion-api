@@ -24,7 +24,7 @@ export class UsersService {
     if (createUserDto.student_tutorings_ids !== undefined) {
       const role = await this.rolesService.findOne(createUserDto.role_id);
       if (role.name !== RoleName.STUDENT_TUTOR) {
-        throw new BadRequestException('this user can not be a student tutor');
+        throw new BadRequestException('this user cannot be a student tutor');
       }
     }
 
@@ -131,8 +131,28 @@ export class UsersService {
   }
 
   async remove(id: string): Promise<void> {
-    await this.usersRepository.findOneOrFail(id);
-    this.studentTutoringTutorsService.removeAllByTutorId(id);
+    const user = await this.usersRepository.findOneOrFail(id, {
+      relations: ['student_tutorings', 'role'],
+    });
+
+    if (user.role.name === RoleName.ADMIN) {
+      throw new BadRequestException('cannot delete a user who is admin');
+    }
+
+    if (user.role.name === RoleName.PROFESSOR) {
+      const canDelete =
+        user.student_tutorings.filter(
+          (student_tutoring) => student_tutoring.professor_id === id,
+        ).length <= 0;
+
+      if (!canDelete) {
+        throw new BadRequestException(
+          'cannot delete a professor that is related to a student_tutoring',
+        );
+      }
+    }
+
+    await this.studentTutoringTutorsService.removeAllByTutorId(id);
     await this.usersRepository.delete(id);
   }
 }
