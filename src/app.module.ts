@@ -19,6 +19,7 @@ import { RoleModulePermissionsModule } from './http/role-module-permissions/role
 import { StudentTutoringsModule } from './http/student-tutorings/student-tutorings.module';
 import { StudentTutoringTutorsModule } from './http/student-tutoring-tutors/student-tutoring-tutors.module';
 import { StudentTutoringProgramsModule } from './http/student-tutoring-programs/student-tutoring-programs.module';
+import { ClassSchedulesModule } from './http/class-schedules/class-schedules.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { StudentTutoringProgramsModule } from './http/student-tutoring-programs/
     StudentTutoringsModule,
     StudentTutoringTutorsModule,
     StudentTutoringProgramsModule,
+    ClassSchedulesModule,
   ],
   controllers: [AppController],
   providers: [{ provide: APP_FILTER, useClass: AllExceptionsFilter }],

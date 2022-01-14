@@ -82,6 +82,7 @@ export class StudentTutoringsService {
         'professor',
         'student_tutorings_tutors',
         'student_tutorings_tutors.tutor',
+        'student_tutorings_tutors.class_schedules',
         'student_tutoring_programs',
         'student_tutoring_programs.program',
       ],

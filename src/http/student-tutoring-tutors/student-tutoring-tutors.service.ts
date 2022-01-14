@@ -55,11 +55,11 @@ export class StudentTutoringTutorsService {
 
   async removeAllByTutorId(id: string) {
     const records = await this.findAllByTutorId(id);
-    this.studentTutoringTutorsRepository.remove(records);
+    return this.studentTutoringTutorsRepository.remove(records);
   }
 
   async removeAllByStudentTutoringId(id: string) {
     const records = await this.findAllByStudentTutoringId(id);
-    this.studentTutoringTutorsRepository.remove(records);
+    return this.studentTutoringTutorsRepository.remove(records);
   }
 }

@@ -13,7 +13,7 @@ import { Role } from '../../roles/entities/role.entity';
 import { IsValidFK } from 'src/validators/is-valid-fk';
 import { IsAvaible } from 'src/validators/is-avaible';
 import { User } from '../entities/user.entity';
-import { StudentTutoring } from 'src/http/student-tutorings/entities/student-tutoring.entity';
+import { StudentTutoring } from '../../student-tutorings/entities/student-tutoring.entity';
 
 export class CreateUserDto {
   @IsString()

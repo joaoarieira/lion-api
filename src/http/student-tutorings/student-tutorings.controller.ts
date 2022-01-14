@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   Put,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { StudentTutoringsService } from './student-tutorings.service';
 import { CreateStudentTutoringDto } from './dto/create-student-tutoring.dto';
@@ -34,14 +35,14 @@ export class StudentTutoringsController {
 
   @Public()
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.studentTutoringsService.findOne(id);
   }
 
   @RolesCanAccess(RoleName.ADMIN)
   @Put(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateStudentTutoringDto: UpdateStudentTutoringDto,
   ) {
     return this.studentTutoringsService.update(id, updateStudentTutoringDto);
@@ -49,7 +50,7 @@ export class StudentTutoringsController {
 
   @RolesCanAccess(RoleName.ADMIN)
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.studentTutoringsService.remove(id);
   }
 }

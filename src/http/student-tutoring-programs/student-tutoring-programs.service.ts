@@ -47,16 +47,16 @@ export class StudentTutoringProgramsService {
 
   async remove(studentTutoringId: string, programId: string) {
     const record = await this.findOne(studentTutoringId, programId);
-    this.studentTutoringProgramsRepository.remove(record);
+    return this.studentTutoringProgramsRepository.remove(record);
   }
 
   async removeAllByStudentTutoringId(id: string) {
     const records = await this.findAllByStudentTutoringId(id);
-    this.studentTutoringProgramsRepository.remove(records);
+    return this.studentTutoringProgramsRepository.remove(records);
   }
 
   async removeAllByProgramId(id: string) {
     const records = await this.findAllByProgramId(id);
-    this.studentTutoringProgramsRepository.remove(records);
+    return this.studentTutoringProgramsRepository.remove(records);
   }
 }

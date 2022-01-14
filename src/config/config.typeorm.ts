@@ -10,7 +10,8 @@ import { RoleModulePermission } from '../http/role-module-permissions/entities/r
 import { User } from '../http/users/entities/user.entity';
 import { StudentTutoring } from '../http/student-tutorings/entities/student-tutoring.entity';
 import { StudentTutoringTutor } from '../http/student-tutoring-tutors/entities/student-tutoring-tutor.entity';
-import { StudentTutoringProgram } from 'src/http/student-tutoring-programs/entities/student-tutoring-program.entity';
+import { StudentTutoringProgram } from '../http/student-tutoring-programs/entities/student-tutoring-program.entity';
+import { ClassSchedule } from '../http/class-schedules/entities/class-schedule.entity';
 
 export const typeorm = () => ({
   typeorm: {
@@ -31,6 +32,7 @@ export const typeorm = () => ({
       StudentTutoring,
       StudentTutoringTutor,
       StudentTutoringProgram,
+      ClassSchedule,
     ],
   },
 });

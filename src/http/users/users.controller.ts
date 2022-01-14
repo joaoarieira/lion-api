@@ -46,6 +46,6 @@ export class UsersController {
   @RolesCanAccess(RoleName.ADMIN)
   @Delete(':id')
   remove(@Param('id', ParseUUIDPipe) id: string) {
-    this.usersService.remove(id);
+    return this.usersService.remove(id);
   }
 }

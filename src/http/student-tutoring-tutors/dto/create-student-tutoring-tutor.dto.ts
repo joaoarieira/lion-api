@@ -3,7 +3,7 @@ import { StudentTutoring } from '../../student-tutorings/entities/student-tutori
 import { User } from '../../users/entities/user.entity';
 import { IsValidFK } from '../../../validators/is-valid-fk';
 import { IsRole } from 'src/validators/is-role';
-import { RoleName } from 'src/http/roles/entities/role-name.enum';
+import { RoleName } from '../../roles/entities/role-name.enum';
 
 export class CreateStudentTutoringTutorDto {
   @Validate(IsValidFK, [StudentTutoring])

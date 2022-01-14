@@ -9,7 +9,7 @@ import {
   Validate,
   ValidateIf,
 } from 'class-validator';
-import { StudentTutoring } from 'src/http/student-tutorings/entities/student-tutoring.entity';
+import { StudentTutoring } from '../../student-tutorings/entities/student-tutoring.entity';
 import { IsAvaible } from 'src/validators/is-avaible';
 import { IsValidFK } from 'src/validators/is-valid-fk';
 import { User } from '../entities/user.entity';
