@@ -21,7 +21,9 @@ export class ProgramsService {
   }
 
   findAll(): Promise<Program[]> {
-    return this.programsRepository.find({ relations: ['campus'] });
+    return this.programsRepository.find({
+      relations: ['campus', 'student_tutoring_programs'],
+    });
   }
 
   findOne(id: string): Promise<Program> {

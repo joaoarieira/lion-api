@@ -16,15 +16,23 @@ export class CampusesService {
     const campus = new Campus();
     campus.name = createCampusDto.name;
 
-    return this.campusesRepository.save(campus);
+    const { id } = await this.campusesRepository.save(campus);
+
+    return this.campusesRepository.findOneOrFail(id, {
+      relations: ['programs'],
+    });
   }
 
   findAll(): Promise<Campus[]> {
-    return this.campusesRepository.find();
+    return this.campusesRepository.find({
+      relations: ['programs'],
+    });
   }
 
   findOne(id: string): Promise<Campus> {
-    return this.campusesRepository.findOneOrFail(id);
+    return this.campusesRepository.findOneOrFail(id, {
+      relations: ['programs'],
+    });
   }
 
   async update(id: string, updateCampusDto: UpdateCampusDto): Promise<Campus> {

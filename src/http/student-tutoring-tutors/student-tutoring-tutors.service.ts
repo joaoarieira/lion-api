@@ -45,7 +45,14 @@ export class StudentTutoringTutorsService {
 
   findOne(id: string): Promise<StudentTutoringTutor> {
     return this.studentTutoringTutorsRepository.findOneOrFail(id, {
-      relations: ['student_tutoring', 'student_tutoring.professor', 'tutor'],
+      relations: [
+        'student_tutoring',
+        'student_tutoring.professor',
+        'student_tutoring.student_tutoring_programs',
+        'student_tutoring.student_tutoring_programs.program',
+        'tutor',
+        'class_schedules',
+      ],
     });
   }
 
