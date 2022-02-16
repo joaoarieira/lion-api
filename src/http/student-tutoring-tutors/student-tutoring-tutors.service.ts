@@ -89,6 +89,11 @@ export class StudentTutoringTutorsService {
 
   async removeAllByStudentTutoringId(id: string) {
     const records = await this.findAllByStudentTutoringId(id);
+    for (const student_tutoring_tutor of records) {
+      await this.classSchedulesService.removeAllByStudentTutoringTutorId(
+        student_tutoring_tutor.id,
+      );
+    }
     return this.studentTutoringTutorsRepository.remove(records);
   }
 }
