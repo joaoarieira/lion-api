@@ -38,13 +38,15 @@ export class UsersService {
 
     const { id: user_id } = newUser;
 
-    for (const student_tutoring_id of createUserDto.student_tutorings_ids) {
-      const studentTutoringTutorDto = {
-        student_tutoring_id,
-        tutor_id: user_id,
-      } as CreateStudentTutoringTutorDto;
+    if (createUserDto.student_tutorings_ids) {
+      for (const student_tutoring_id of createUserDto.student_tutorings_ids) {
+        const studentTutoringTutorDto = {
+          student_tutoring_id,
+          tutor_id: user_id,
+        } as CreateStudentTutoringTutorDto;
 
-      await this.studentTutoringTutorsService.create(studentTutoringTutorDto);
+        await this.studentTutoringTutorsService.create(studentTutoringTutorDto);
+      }
     }
 
     return this.usersRepository.findOne(user_id, {
@@ -58,7 +60,9 @@ export class UsersService {
   }
 
   findAll(): Promise<User[]> {
-    return this.usersRepository.find({ relations: ['role'] });
+    return this.usersRepository.find({
+      relations: ['role', 'student_tutorings'],
+    });
   }
 
   findOne(id: string): Promise<User> {
@@ -99,7 +103,14 @@ export class UsersService {
       relations: ['role'],
     });
 
-    const { student_tutorings_ids, ...user } = updateUserDto;
+    const { student_tutorings_ids, password, ...user } = updateUserDto;
+
+    let newUser = new User();
+    newUser = { ...newUser, ...user };
+
+    if (password) {
+      newUser.password_hash = bcrypt.hashSync(password, 10);
+    }
 
     if (student_tutorings_ids !== undefined) {
       if (userRole.name !== RoleName.STUDENT_TUTOR) {
@@ -118,7 +129,7 @@ export class UsersService {
       }
     }
 
-    await this.usersRepository.update(id, user);
+    await this.usersRepository.update(id, newUser);
 
     return this.usersRepository.findOne(id, {
       relations: [
