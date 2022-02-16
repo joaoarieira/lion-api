@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ClassSchedulesService } from '../class-schedules/class-schedules.service';
 import { CreateStudentTutoringTutorDto } from './dto/create-student-tutoring-tutor.dto';
 import { UpdateStudentTutoringTutorDto } from './dto/update-student-tutoring-tutor.dto';
 import { StudentTutoringTutor } from './entities/student-tutoring-tutor.entity';
@@ -10,6 +11,7 @@ export class StudentTutoringTutorsService {
   constructor(
     @InjectRepository(StudentTutoringTutor)
     private readonly studentTutoringTutorsRepository: Repository<StudentTutoringTutor>,
+    private readonly classSchedulesService: ClassSchedulesService,
   ) {}
 
   async create(
@@ -77,6 +79,11 @@ export class StudentTutoringTutorsService {
 
   async removeAllByTutorId(id: string) {
     const records = await this.findAllByTutorId(id);
+    for (const student_tutoring_tutor of records) {
+      await this.classSchedulesService.removeAllByStudentTutoringTutorId(
+        student_tutoring_tutor.id,
+      );
+    }
     return this.studentTutoringTutorsRepository.remove(records);
   }
 

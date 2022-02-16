@@ -32,6 +32,12 @@ export class ClassSchedulesService {
     });
   }
 
+  findAllByStudentTutoringTutorId(id: string) {
+    return this.classSchedulesRepository.find({
+      where: { student_tutoring_tutor_id: id },
+    });
+  }
+
   findOne(id: string) {
     return this.classSchedulesRepository.findOneOrFail(id, {
       relations: ['student_tutoring_tutor'],
@@ -46,5 +52,10 @@ export class ClassSchedulesService {
 
   async remove(id: string) {
     await this.classSchedulesRepository.delete(id);
+  }
+
+  async removeAllByStudentTutoringTutorId(id: string) {
+    const records = await this.findAllByStudentTutoringTutorId(id);
+    await this.classSchedulesRepository.remove(records);
   }
 }
