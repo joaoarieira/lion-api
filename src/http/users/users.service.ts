@@ -37,7 +37,7 @@ export class UsersService {
 
   findAll(): Promise<User[]> {
     return this.usersRepository.find({
-      relations: ['role'],
+      relations: ['student_tutoring_professors', 'role'],
     });
   }
 
@@ -95,30 +95,20 @@ export class UsersService {
   }
 
   async remove(id: string): Promise<void> {
-    console.log(1);
     const user = await this.usersRepository.findOneOrFail(id, {
       relations: ['student_tutoring_professors', 'role'],
     });
-    console.log(2);
 
     if (user.role.name === RoleName.ADMIN) {
       throw new BadRequestException('cannot delete a user who is admin');
     }
 
     if (user.role.name === RoleName.PROFESSOR) {
-      console.log(
-        'user.student_tutoring_professors',
-        user.student_tutoring_professors,
-      );
-      console.log('id', id);
-
       const canDelete =
         user.student_tutoring_professors.findIndex(
           (student_tutoring_professor) =>
             student_tutoring_professor.professor_id === id,
         ) < 0;
-
-      console.log('canDelete', canDelete);
 
       if (!canDelete) {
         throw new BadRequestException(
