@@ -1,9 +1,4 @@
-import {
-  MigrationInterface,
-  QueryRunner,
-  Table,
-  TableForeignKey,
-} from 'typeorm';
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export class CreateStudentTutorings1641444843922 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -18,12 +13,6 @@ export class CreateStudentTutorings1641444843922 implements MigrationInterface {
             generationStrategy: 'uuid',
             default: 'uuid_generate_v4()',
             isUnique: true,
-          },
-          {
-            name: 'professor_id',
-            type: 'uuid',
-            isNullable: true,
-            default: null,
           },
           {
             name: 'course_code',
@@ -53,15 +42,6 @@ export class CreateStudentTutorings1641444843922 implements MigrationInterface {
             default: 'now()',
           },
         ],
-      }),
-    );
-
-    await queryRunner.createForeignKey(
-      'student_tutorings',
-      new TableForeignKey({
-        columnNames: ['professor_id'],
-        referencedColumnNames: ['id'],
-        referencedTableName: 'users',
       }),
     );
   }

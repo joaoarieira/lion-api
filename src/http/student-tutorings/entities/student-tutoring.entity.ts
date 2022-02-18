@@ -3,8 +3,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -16,9 +14,6 @@ import { StudentTutoringProgram } from '../../student-tutoring-programs/entities
 export class StudentTutoring {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
-  @Column()
-  professor_id: string;
 
   @Column()
   course_code: string;
@@ -34,10 +29,6 @@ export class StudentTutoring {
 
   @UpdateDateColumn()
   updated_at: Date;
-
-  @ManyToOne(() => User, (user) => user.student_tutorings)
-  @JoinColumn({ name: 'professor_id', referencedColumnName: 'id' })
-  professor: User;
 
   @OneToMany(
     () => StudentTutoringTutor,

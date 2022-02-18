@@ -23,6 +23,9 @@ export class StudentTutoringTutor {
   @Column()
   tutor_id: string;
 
+  @Column()
+  professor_id: string;
+
   @CreateDateColumn()
   created_at: Date;
 
@@ -39,6 +42,10 @@ export class StudentTutoringTutor {
   @ManyToOne(() => User, (user) => user.student_tutoring_tutors)
   @JoinColumn({ name: 'tutor_id', referencedColumnName: 'id' })
   tutor: User;
+
+  @ManyToOne(() => User, (user) => user.student_tutoring_professors)
+  @JoinColumn({ name: 'professor_id', referencedColumnName: 'id' })
+  professor: User;
 
   @OneToMany(
     () => ClassSchedule,

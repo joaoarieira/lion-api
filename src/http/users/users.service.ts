@@ -2,8 +2,6 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RoleName } from '../roles/entities/role-name.enum';
-import { RolesService } from '../roles/roles.service';
-import { CreateStudentTutoringTutorDto } from '../student-tutoring-tutors/dto/create-student-tutoring-tutor.dto';
 import { StudentTutoringTutorsService } from '../student-tutoring-tutors/student-tutoring-tutors.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -17,17 +15,9 @@ export class UsersService {
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
     private readonly studentTutoringTutorsService: StudentTutoringTutorsService,
-    private readonly rolesService: RolesService,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    if (createUserDto.student_tutorings_ids !== undefined) {
-      const role = await this.rolesService.findOne(createUserDto.role_id);
-      if (role.name !== RoleName.STUDENT_TUTOR) {
-        throw new BadRequestException('this user cannot be a student tutor');
-      }
-    }
-
     const user = new User();
     user.name = createUserDto.name;
     user.email = createUserDto.email;
@@ -36,23 +26,9 @@ export class UsersService {
     user.password_hash = bcrypt.hashSync(createUserDto.password, 10);
     const newUser = await this.usersRepository.save(user);
 
-    const { id: user_id } = newUser;
-
-    if (createUserDto.student_tutorings_ids) {
-      for (const student_tutoring_id of createUserDto.student_tutorings_ids) {
-        const studentTutoringTutorDto = {
-          student_tutoring_id,
-          tutor_id: user_id,
-        } as CreateStudentTutoringTutorDto;
-
-        await this.studentTutoringTutorsService.create(studentTutoringTutorDto);
-      }
-    }
-
-    return this.usersRepository.findOne(user_id, {
+    return this.usersRepository.findOne(newUser.id, {
       relations: [
         'role',
-        'student_tutorings',
         'student_tutoring_tutors',
         'student_tutoring_tutors.student_tutoring',
       ],
@@ -61,7 +37,7 @@ export class UsersService {
 
   findAll(): Promise<User[]> {
     return this.usersRepository.find({
-      relations: ['role', 'student_tutorings'],
+      relations: ['role'],
     });
   }
 
@@ -69,7 +45,7 @@ export class UsersService {
     return this.usersRepository.findOneOrFail(id, {
       relations: [
         'role',
-        'student_tutorings',
+        'student_tutoring_professors',
         'student_tutoring_tutors',
         'student_tutoring_tutors.student_tutoring',
       ],
@@ -91,7 +67,6 @@ export class UsersService {
       ],
       relations: [
         'role',
-        'student_tutorings',
         'student_tutoring_tutors',
         'student_tutoring_tutors.student_tutoring',
       ],
@@ -99,11 +74,7 @@ export class UsersService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-    const { role: userRole } = await this.usersRepository.findOneOrFail(id, {
-      relations: ['role'],
-    });
-
-    const { student_tutorings_ids, password, ...user } = updateUserDto;
+    const { password, ...user } = updateUserDto;
 
     let newUser = new User();
     newUser = { ...newUser, ...user };
@@ -112,29 +83,11 @@ export class UsersService {
       newUser.password_hash = bcrypt.hashSync(password, 10);
     }
 
-    if (student_tutorings_ids !== undefined) {
-      if (userRole.name !== RoleName.STUDENT_TUTOR) {
-        throw new BadRequestException('this user is not a student tutor');
-      }
-
-      await this.studentTutoringTutorsService.removeAllByTutorId(id);
-
-      for (const student_tutoring_id of student_tutorings_ids) {
-        const studentTutoringTutorDto = {
-          student_tutoring_id,
-          tutor_id: id,
-        } as CreateStudentTutoringTutorDto;
-
-        await this.studentTutoringTutorsService.create(studentTutoringTutorDto);
-      }
-    }
-
     await this.usersRepository.update(id, newUser);
 
     return this.usersRepository.findOne(id, {
       relations: [
         'role',
-        'student_tutorings',
         'student_tutoring_tutors',
         'student_tutoring_tutors.student_tutoring',
       ],
@@ -142,23 +95,34 @@ export class UsersService {
   }
 
   async remove(id: string): Promise<void> {
+    console.log(1);
     const user = await this.usersRepository.findOneOrFail(id, {
-      relations: ['student_tutorings', 'role'],
+      relations: ['student_tutoring_professors', 'role'],
     });
+    console.log(2);
 
     if (user.role.name === RoleName.ADMIN) {
       throw new BadRequestException('cannot delete a user who is admin');
     }
 
     if (user.role.name === RoleName.PROFESSOR) {
+      console.log(
+        'user.student_tutoring_professors',
+        user.student_tutoring_professors,
+      );
+      console.log('id', id);
+
       const canDelete =
-        user.student_tutorings.filter(
-          (student_tutoring) => student_tutoring.professor_id === id,
-        ).length <= 0;
+        user.student_tutoring_professors.findIndex(
+          (student_tutoring_professor) =>
+            student_tutoring_professor.professor_id === id,
+        ) < 0;
+
+      console.log('canDelete', canDelete);
 
       if (!canDelete) {
         throw new BadRequestException(
-          'cannot delete a professor that is related to a student_tutoring',
+          'cannot delete a professor that is related to a student_tutoring_tutor',
         );
       }
     }

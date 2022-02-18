@@ -9,7 +9,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { StudentTutoring } from '../../student-tutorings/entities/student-tutoring.entity';
 import { StudentTutoringTutor } from '../../student-tutoring-tutors/entities/student-tutoring-tutor.entity';
 
 @Entity('users')
@@ -43,14 +42,14 @@ export class User {
   role: Role;
 
   @OneToMany(
-    () => StudentTutoring,
-    (studentTutoring) => studentTutoring.professor,
-  )
-  student_tutorings: StudentTutoring[];
-
-  @OneToMany(
     () => StudentTutoringTutor,
     (studentTutoringTutor) => studentTutoringTutor.tutor,
   )
   student_tutoring_tutors: StudentTutoringTutor[];
+
+  @OneToMany(
+    () => StudentTutoringTutor,
+    (studentTutoringTutor) => studentTutoringTutor.professor,
+  )
+  student_tutoring_professors: StudentTutoringTutor[];
 }

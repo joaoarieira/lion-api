@@ -23,13 +23,13 @@ export class StudentTutoringTutorsService {
       );
     const { id } = newStudentTutoringTutor;
     return this.studentTutoringTutorsRepository.findOne(id, {
-      relations: ['student_tutoring', 'student_tutoring.professor', 'tutor'],
+      relations: ['student_tutoring', 'professor', 'tutor'],
     });
   }
 
   findAll(): Promise<StudentTutoringTutor[]> {
     return this.studentTutoringTutorsRepository.find({
-      relations: ['student_tutoring', 'student_tutoring.professor', 'tutor'],
+      relations: ['student_tutoring', 'professor', 'tutor'],
     });
   }
 
@@ -45,14 +45,20 @@ export class StudentTutoringTutorsService {
     });
   }
 
+  findAllByProfessorId(id: string) {
+    return this.studentTutoringTutorsRepository.find({
+      where: { professor_id: id },
+    });
+  }
+
   findOne(id: string): Promise<StudentTutoringTutor> {
     return this.studentTutoringTutorsRepository.findOneOrFail(id, {
       relations: [
         'student_tutoring',
-        'student_tutoring.professor',
         'student_tutoring.student_tutoring_programs',
         'student_tutoring.student_tutoring_programs.program',
         'tutor',
+        'professor',
         'class_schedules',
       ],
     });
@@ -68,7 +74,7 @@ export class StudentTutoringTutorsService {
       updateStudentTutoringTutorDto,
     );
     return this.studentTutoringTutorsRepository.findOne(id, {
-      relations: ['student_tutoring', 'student_tutoring.professor', 'tutor'],
+      relations: ['student_tutoring', 'professor', 'tutor'],
     });
   }
 
@@ -79,6 +85,16 @@ export class StudentTutoringTutorsService {
 
   async removeAllByTutorId(id: string) {
     const records = await this.findAllByTutorId(id);
+    for (const student_tutoring_tutor of records) {
+      await this.classSchedulesService.removeAllByStudentTutoringTutorId(
+        student_tutoring_tutor.id,
+      );
+    }
+    return this.studentTutoringTutorsRepository.remove(records);
+  }
+
+  async removeAllByProfessorId(id: string) {
+    const records = await this.findAllByProfessorId(id);
     for (const student_tutoring_tutor of records) {
       await this.classSchedulesService.removeAllByStudentTutoringTutorId(
         student_tutoring_tutor.id,

@@ -22,6 +22,12 @@ export class CreateStudentTutoringTutors1641520754344
             isUnique: true,
           },
           {
+            name: 'professor_id',
+            type: 'uuid',
+            isNullable: true,
+            default: null,
+          },
+          {
             name: 'tutor_id',
             type: 'uuid',
             isPrimary: true,
@@ -55,6 +61,11 @@ export class CreateStudentTutoringTutors1641520754344
         columnNames: ['student_tutoring_id'],
         referencedColumnNames: ['id'],
         referencedTableName: 'student_tutorings',
+      }),
+      new TableForeignKey({
+        columnNames: ['professor_id'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'users',
       }),
     ]);
   }

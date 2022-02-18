@@ -1,5 +1,4 @@
 import {
-  IsArray,
   IsBoolean,
   IsEmail,
   IsOptional,
@@ -7,13 +6,11 @@ import {
   IsUUID,
   MinLength,
   Validate,
-  ValidateIf,
 } from 'class-validator';
 import { Role } from '../../roles/entities/role.entity';
 import { IsValidFK } from 'src/validators/is-valid-fk';
 import { IsAvaible } from 'src/validators/is-avaible';
 import { User } from '../entities/user.entity';
-import { StudentTutoring } from '../../student-tutorings/entities/student-tutoring.entity';
 
 export class CreateUserDto {
   @IsString()
@@ -34,11 +31,4 @@ export class CreateUserDto {
   @IsBoolean()
   @IsOptional()
   is_active?: boolean;
-
-  @Validate(IsValidFK, [StudentTutoring], { each: true })
-  @IsUUID(4, { each: true })
-  @ValidateIf((o) => o.student_tutorings_ids?.length > 0)
-  @IsArray()
-  @IsOptional()
-  student_tutorings_ids: string[];
 }

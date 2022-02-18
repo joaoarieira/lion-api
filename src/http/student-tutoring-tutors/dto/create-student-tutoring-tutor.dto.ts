@@ -14,4 +14,9 @@ export class CreateStudentTutoringTutorDto {
   @Validate(IsValidFK, [User])
   @IsUUID()
   tutor_id: string;
+
+  @Validate(IsRole, [RoleName.PROFESSOR])
+  @Validate(IsValidFK, [User])
+  @IsUUID()
+  professor_id: string;
 }
