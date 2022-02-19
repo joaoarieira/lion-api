@@ -22,7 +22,12 @@ export const typeorm = () => ({
     password: process.env.TYPEORM_PASSWORD,
     database: process.env.TYPEORM_DATABASE,
     // TODO: trocar para false em desenvolvimento
-    extra: { ssl: true },
+    ssl: true,
+    extra: {
+      ssl: {
+        rejectUnauthorized: false,
+      },
+    },
     entities: [
       Campus,
       Program,
