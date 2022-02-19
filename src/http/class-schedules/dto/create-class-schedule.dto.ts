@@ -3,7 +3,6 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  IsUrl,
   IsUUID,
   Max,
   Min,
@@ -23,8 +22,8 @@ export class CreateClassScheduleDto {
   note: string;
 
   @IsNumber()
-  @Min(1) // Monday
-  @Max(5) // Friday
+  @Min(0) // Sunday
+  @Max(6) // Saturday
   day_of_the_week: number;
 
   @IsMilitaryTime()
@@ -39,7 +38,7 @@ export class CreateClassScheduleDto {
   @IsString()
   meeting_place: string;
 
-  @IsUrl()
+  @IsString()
   @IsOptional()
   meeting_url: string;
 }

@@ -19,6 +19,7 @@ export class ClassSchedulesService {
     classSchedule.starts_at = createClassScheduleDto.starts_at;
     classSchedule.ends_at = createClassScheduleDto.ends_at;
     classSchedule.meeting_place = createClassScheduleDto.meeting_place;
+    classSchedule.meeting_url = createClassScheduleDto.meeting_url;
     classSchedule.student_tutoring_tutor_id =
       createClassScheduleDto.student_tutoring_tutor_id;
 
@@ -40,7 +41,10 @@ export class ClassSchedulesService {
 
   findOne(id: string) {
     return this.classSchedulesRepository.findOneOrFail(id, {
-      relations: ['student_tutoring_tutor'],
+      relations: [
+        'student_tutoring_tutor',
+        'student_tutoring_tutor.student_tutoring',
+      ],
     });
   }
 
