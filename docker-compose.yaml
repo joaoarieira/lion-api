@@ -14,7 +14,7 @@ services:
 
   postgres:
     image: postgres:alpine
-    container_name: lion-postgres
+    container_name: lion-postgress
     tty: true
     volumes:
       - postgres-data:/var/lib/postgresql/data
