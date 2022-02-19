@@ -8,7 +8,6 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { Public } from 'src/auth/jwt-auth.guard';
 import { RolesCanAccess } from '../../decorators/roles-can-access.decorator';
 import { RoleName } from '../roles/entities/role-name.enum';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -19,7 +18,7 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Public()
+  @RolesCanAccess(RoleName.ADMIN)
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
