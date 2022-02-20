@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ClassSchedulesService } from '../class-schedules/class-schedules.service';
 import { CreateStudentTutoringTutorDto } from './dto/create-student-tutoring-tutor.dto';
+import { GetAllStudentTutoringTutorDto } from './dto/get-all-student-tutoring-tutor.dto';
 import { UpdateStudentTutoringTutorDto } from './dto/update-student-tutoring-tutor.dto';
 import { StudentTutoringTutor } from './entities/student-tutoring-tutor.entity';
 
@@ -27,7 +28,30 @@ export class StudentTutoringTutorsService {
     });
   }
 
-  findAll(): Promise<StudentTutoringTutor[]> {
+  async findAll(
+    query?: GetAllStudentTutoringTutorDto,
+  ): Promise<StudentTutoringTutor[]> {
+    if (query.program_id) {
+      const studentTutoringTutors =
+        await this.studentTutoringTutorsRepository.find({
+          relations: [
+            'student_tutoring',
+            'student_tutoring.student_tutoring_programs',
+            'student_tutoring.student_tutoring_programs.program',
+            'professor',
+            'tutor',
+          ],
+        });
+
+      const filteredValues = studentTutoringTutors.filter((value) =>
+        value.student_tutoring.student_tutoring_programs.some(
+          (item) => item.program_id === query.program_id,
+        ),
+      );
+
+      return filteredValues;
+    }
+
     return this.studentTutoringTutorsRepository.find({
       relations: ['student_tutoring', 'professor', 'tutor'],
     });
