@@ -5,4 +5,8 @@ export class GetAllStudentTutoringTutorDto {
   @IsString()
   @IsOptional()
   program_id?: string;
+
+  @IsString()
+  @IsOptional()
+  query?: string;
 }

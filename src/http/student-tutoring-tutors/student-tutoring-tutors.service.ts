@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { ClassSchedulesService } from '../class-schedules/class-schedules.service';
 import { CreateStudentTutoringTutorDto } from './dto/create-student-tutoring-tutor.dto';
 import { GetAllStudentTutoringTutorDto } from './dto/get-all-student-tutoring-tutor.dto';
@@ -50,6 +50,33 @@ export class StudentTutoringTutorsService {
       );
 
       return filteredValues;
+    }
+
+    if (query.query) {
+      const studentTutoringTutors =
+        await this.studentTutoringTutorsRepository.find({
+          relations: [
+            'student_tutoring',
+            'student_tutoring.student_tutoring_programs',
+            'student_tutoring.student_tutoring_programs.program',
+            'professor',
+            'tutor',
+          ],
+          where: [
+            {
+              student_tutoring: {
+                course_name: ILike(`%${query.query}%`),
+              },
+            },
+            {
+              student_tutoring: {
+                course_code: ILike(`%${query.query}%`),
+              },
+            },
+          ],
+        });
+
+      return studentTutoringTutors;
     }
 
     return this.studentTutoringTutorsRepository.find({
