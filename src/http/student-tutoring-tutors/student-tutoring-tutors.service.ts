@@ -52,6 +52,25 @@ export class StudentTutoringTutorsService {
       return filteredValues;
     }
 
+    if (query.tutor_id) {
+      const studentTutoringTutors =
+        await this.studentTutoringTutorsRepository.find({
+          relations: [
+            'student_tutoring',
+            'student_tutoring.student_tutoring_programs',
+            'student_tutoring.student_tutoring_programs.program',
+            'professor',
+            'tutor',
+          ],
+        });
+
+      const filteredValues = studentTutoringTutors.filter(
+        (value) => value.tutor_id === query.tutor_id,
+      );
+
+      return filteredValues;
+    }
+
     if (query.query) {
       const studentTutoringTutors =
         await this.studentTutoringTutorsRepository.find({
